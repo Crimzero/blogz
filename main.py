@@ -14,9 +14,11 @@ app.secret_key = 'Muffins'
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
+    owner_id = db.column(db.Integer, foreign_key=User.id)
     title = db.Column(db.String(120))
     content = db.Column(db.String(240))
-    def __init__(self, title, content):
+    def __init__(self, owner_id, title, content):
+        self.owner_id = owner_id
         self.title = title
         self.content = content
 
