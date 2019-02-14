@@ -9,11 +9,11 @@
 
         <ul>
             {% for blog in blogs %}
-            <li><h2>{{blog.title}}</h2>
-                {{blog.content}}
+            <li><h2><a href='./single_blog?id={{blog.id}}'>{{blog.title}}</a> </h2>
+                <h3>{{blog.content}}</h3>
                 <form method='POST' action='/delete-blog' style='display: inline-block;'>
-                    <input type='hidden' name='blog-id' value='{{blog.id}}' />
-                    <input type='submit' value='Done!'>
+                    <input type='hidden' name='id' value='{{blog.id}}' />
+                    
                 </form>
             </li>
             {% endfor %}
