@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1> The BLOG</h1>
+    
+    {% if blogs|length == 0 %}
+    <p>No posts yet</p>
+    {% else %}
 
+        <ul>
+            {% for blog in blogs %}
+            <li><h2><a href='./single_blog?id={{blog.id}}'>{{blog.title}}</a> </h2>
+                <h3 style='display: inline-block;'>written by {{blog.author}}</h3>
+                <h3>{{blog.content}}</h3>
+                <form method='POST' action='/delete-blog' style='display: inline-block;'>
+                    <input type='hidden' name='id' value='{{blog.id}}' />
+                    
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <hr />
 
 {% endblock %}

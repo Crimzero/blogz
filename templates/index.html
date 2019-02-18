@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> The BLOG</h1>
+    
+    <ul>
+        {% for user in authors %}
+        <li><h2><a href='./single_user?id={{user.id}}'>{{user.username}}</a> </h2>
+            
+            <input type='hidden' name='id' value='{{user.id}}' />
+                    
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <hr />
+
+{% endblock %}
