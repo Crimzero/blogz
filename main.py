@@ -14,7 +14,7 @@ app.secret_key = 'Muffins'
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.column(db.Integer, foreign_key=User.id)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(120))
     content = db.Column(db.String(240))
     def __init__(self, owner_id, title, content):
@@ -61,6 +61,7 @@ def index():
 
 @app.route('/signup', methods = ['POST', 'GET'])
 def signup():
+    
     if request.method == 'GET':
         return render_template('signup.html')
     if request.method == 'POST':
@@ -69,6 +70,7 @@ def signup():
         pwd = request.form['pwd']
         confirm_pwd = request.form['confirm_pwd']
         username_blank_error = ''
+        username_duplicate_error = ''
         username_length_error = ''
         username_space_error = ''
         email_invalid_error = ''
@@ -76,16 +78,19 @@ def signup():
         pwd_requirement_error = ''
         confirm_pwd_blank_error = ''
         confirm_error = ''
-    existing_user = User.query.filter_by(email=email).first()
-
+        existing_user = User.query.filter_by(username=username).first()
 #Username    
+    
     if username == '':
         username_blank_error = '*Required field'
     elif ' ' in username:
         username_space_error = "You can't put a space in your user name.  Come on man, get it together...'"
+    elif existing_user == True:
+        username_duplicate_error = "Sorry, that name's already taken"
     else:
         if len(username) < 3 or len(username)> 20:
             username_length_error = 'Username must be between 3 and 20 characters'
+        
 #Email
     if email == '':
         pass 
@@ -103,14 +108,14 @@ def signup():
         pwd = ''
         confirm_pwd = ''
 #Render
-    if  username_blank_error or username_length_error or username_space_error or email_invalid_error or pwd_blank_error or pwd_requirement_error or confirm_pwd_blank_error or confirm_error:
+    if  username_blank_error or username_length_error or username_duplicate_error or username_space_error or email_invalid_error or pwd_blank_error or pwd_requirement_error or confirm_pwd_blank_error or confirm_error:
         return render_template('signup.html', title='Blogz Sign-up', username=username, email=email, pwd='', confirm_pwd='', username_blank_error=username_blank_error, username_length_error=username_length_error, username_space_error=username_space_error, email_invalid_error=email_invalid_error, pwd_blank_error=pwd_blank_error, pwd_requirement_error=pwd_requirement_error, confirm_pwd_blank_error=confirm_pwd_blank_error, confirm_error=confirm_error)
     elif not existing_user:
         new_user = User(username, email, pwd)
         db.session.add(new_user)
         db.session.commit()
         session['email'] = email
-        return redirect('/')
+        return redirect('/newpost')
     else:
         # response msg
         return '<h1>Duplicate user</h1>'
@@ -137,6 +142,8 @@ def blog():
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
+    owner_id = request.args.get('user.id')
+
     if request.method == 'GET':
         return render_template('/newpost.html')
         
@@ -153,7 +160,7 @@ def newpost():
             flash('*Too verbose, get to the point', 'error')
             return render_template('/newpost.html', title=title, content=content)
 
-        new_blog = Blog(title, content)
+        new_blog = Blog(owner_id, title, content)
         
         db.session.add(new_blog)
         db.session.commit()
