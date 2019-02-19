@@ -56,7 +56,7 @@ def require_login():
         return redirect('/login')
 
 @app.route('/')
-# >>>a page for all of the author names.<<<
+
 def index():
     authors = User.query.all()
     return render_template('index.html', title="BLOGZ' Authors", authors=authors)
