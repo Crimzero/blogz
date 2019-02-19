@@ -173,9 +173,10 @@ def newpost():
 @app.route('/single_user', methods = ['GET'])
 #>>>a page for a single user's blog posts<<<
 def single_user():
-    author = request.args.get('1')
+    author = request.args.get('id')
     blog_list = Blog.query.filter_by(owner_id=author).all()
-    return render_template('single_user.html', title='The Blog', blog_list=blog_list)
+    print(len(blog_list))
+    return render_template('single_user.html', title='The Blog', blogs=blog_list)
 
 
 @app.route('/single_blog', methods=['GET'])
