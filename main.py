@@ -64,6 +64,7 @@ def index():
 @app.route('/blog')
 def blog():    
     blogs = Blog.query.all()
+    authors = User.query.all()
     return render_template('blog.html', title='The BLOG', blogs=blogs)
 
 @app.route('/signup', methods = ['POST', 'GET'])
@@ -175,6 +176,7 @@ def newpost():
 def single_user():
     author = request.args.get('id')
     blog_list = Blog.query.filter_by(owner_id=author).all()
+    print(author)
     print(len(blog_list))
     return render_template('single_user.html', title='The Blog', blogs=blog_list)
 
@@ -192,3 +194,5 @@ def logout():
 
 if __name__ == "__main__":
     app.run()
+
+#single_user?id={{user.id}}

@@ -9,7 +9,8 @@
 
         <ul>
             {% for blog in blogs %}
-            <li><h2><a href='./single_blog?id={{blog.id}}'>{{blog.title}}</a> written by <a href='./single_user?id={{user.id}}'>{{blog.author.username}}</a> </h2>
+            <li>
+                <h2 style='display: inline;'><a href='./single_blog?id={{blog.id}}'>{{blog.title}}</a></h2> written by {{blog.author.username}} 
 
                 <h3>{{blog.content}}</h3>
                 <form method='POST' action='/delete-blog' style='display: inline-block;'>
